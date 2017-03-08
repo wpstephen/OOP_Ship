@@ -685,6 +685,6 @@ public class Ship {
 	private static double MINIMUM_RADIUS = 10.0;
 	private static final double MINIMUM_DURATION = 0.0;
 
-	
+//Test just	
 }
 
