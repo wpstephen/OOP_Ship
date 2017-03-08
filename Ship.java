@@ -631,51 +631,84 @@ public class Ship {
 	 * @throws IllegalDenominatorException
 	 */
 	
+	
+	public double getNewPositionXShip(Ship other) {
+		
+		double getNewPositionShipX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
+		
+		return getNewPositionShipX;
+	}
+	
+	public double getNewPositionYShip(Ship other) {
+		
+		double getNewPositionShipY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
+		
+		return getNewPositionShipY;
+	}
+	
+	
 	public double [] getCollisionposition (Ship other) throws NullPointerException, IllegalDenominatorException { //exception verwijst naar de exception binnen getTimeToCollision, moet ik ook al rekening houden hiermee en in een if-statement plaatsen?
 		
-		double angle = getOrientationAtCollision(other);
+		double deltaX = (other.getNewPositionXShip(this) - this.getNewPositionXShip(other) );
+		double deltaY = (other.getNewPositionYShip(this) - this.getNewPositionYShip(other) );
+		double angle = Math.atan2(deltaY,deltaX);
+		
 		
 		if (this.getTimeToCollision(other) == Double.POSITIVE_INFINITY)
 			return null;
 		
 		if (! overlap(other)) {
-			
-//			double [] collisionPosition;
-			if (this.getPositionY() <= other.getPositionY()) {
-//				collisionPosition[0] = this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius();
-//				collisionPosition[1] = this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius();
+			double x;
+			double y;
+			if (other.getNewPositionXShip(this) > this.getNewPositionXShip(other) )
+				
+				x = this.getNewPositionXShip(other) + this.getRadius()*Math.cos(angle);
+				y = this.getNewPositionYShip(other) + this.getRadius()*Math.sin(angle);
+				
+			x = other.getNewPositionXShip(this) + other.getRadius()*Math.cos(angle);
+			y = other.getNewPositionYShip(this) + other.getRadius()*Math.sin(angle);
+			double [] collPos= {x,y}; 
+		return collPos;
+		}	
+		
+//		if (! overlap(other)) {
+//			
+////			double [] collisionPosition;
+//			if (this.getPositionY() <= other.getPositionY()) {
+////				collisionPosition[0] = this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius();
+////				collisionPosition[1] = this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius();
+////			}
+//				double [] collisionPosition = {this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius()
+//					, this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius()};
+//				return collisionPosition;
+//
 //			}
-				double [] collisionPosition = {this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius()
-					, this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius()};
-				return collisionPosition;
-
-			}
-			else {
-				double [] collisionPosition = {other.getPositionX()+getTimeToCollision(other)*other.getVelocityX()+Math.cos(angle)*other.getRadius()
-							, other.getPositionY()+getTimeToCollision(other)*other.getVelocityY()+Math.sin(angle)*other.getRadius()};
-				return collisionPosition;
-				}
-			}
-		return null;
+//			else {
+//				double [] collisionPosition = {other.getPositionX()+getTimeToCollision(other)*other.getVelocityX()+Math.cos(angle)*other.getRadius()
+//							, other.getPositionY()+getTimeToCollision(other)*other.getVelocityY()+Math.sin(angle)*other.getRadius()};
+//				return collisionPosition;
+//				}
+//			}
+//		return null;
 		
 	}
 	
-	public double getOrientationAtCollision (Ship other) {
-		double angle;
-		double [] deltaPosition = deltaPosition(other);
-		
-		if (this.getPositionY() <= other.getPositionY())
-			angle = Math.atan2(deltaPosition[0],deltaPosition[1]);
-		
-		else
-			angle = Math.atan2(-deltaPosition[0],-deltaPosition[1]);
-		
-		return angle;
+//	public double getOrientationAtCollision (Ship other) {
+//		double angle;
+//		double [] deltaPosition = deltaPosition(other);
+//		
+//		if (this.getPositionY() <= other.getPositionY())
+//			angle = Math.atan2(deltaPosition[0],deltaPosition[1]);
+//		
+//		else
+//			angle = Math.atan2(-deltaPosition[0],-deltaPosition[1]);
+//		
+//		return angle;
 		
 				
 		//dus eerst met if checken voor hoogste y coordinate, die ship pakken als other. Dus
 		// if this.y <= other -> nprmaal geval, else other = this en this = 0, this.Y = other.this . theta = 0, this.x = other x , theta = pi/2
-	}
+//	}
 	
 	
 	private static double MAXIMUM_VELOCITY = 300000.0; 
