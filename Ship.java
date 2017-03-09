@@ -86,6 +86,14 @@ public class Ship {
 		
 	}
 	
+	public Ship() throws IllegalRadiusException {
+		setVelocity(MINIMUM_VELOCITY,MINIMUM_VELOCITY);
+		setRadius(MINIMUM_RADIUS);
+		setPosition(DEF_POSITION,DEF_POSITION);
+		setOrientation(MINIMUM_ORIENTATION);
+		
+	}
+	
 
 //	/**
 //	 * Check whether the given position is a valid position
@@ -701,6 +709,7 @@ public class Ship {
 	private static final double MAXIMUM_ORIENTATION = 2.0 *Math.PI;
 	private static double MINIMUM_RADIUS = 10.0;
 	private static final double MINIMUM_DURATION = 0.0;
+	private static final double DEF_POSITION = 0.0;
 
 }
 
