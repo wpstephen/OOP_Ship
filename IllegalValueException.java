@@ -1,5 +1,4 @@
-import be.kuleuven.cs.som.annotate.Basic;
-import be.kuleuven.cs.som.annotate.Raw;
+import be.kuleuven.cs.som.annotate.*;
 
 /**
  * 	A class of exceptions signaling illegal value for the position of ships. 

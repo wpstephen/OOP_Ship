@@ -129,7 +129,7 @@ public class Ship {
 	 */
 	
 	public static boolean isValidPosition(double xposition, double yposition){   	
-		return (xposition != Double.NaN && yposition != Double.NaN);			
+		return (!Double.isNaN(xposition) && !Double.isNaN(yposition));			
 	}
 
 
