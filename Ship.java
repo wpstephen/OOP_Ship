@@ -631,84 +631,25 @@ public class Ship {
 	 * @throws IllegalDenominatorException
 	 */
 	
-<<<<<<< HEAD
-	
-	public double getNewPositionXShip(Ship other) {
-		
-		double getNewPositionShipX = this.getPositionX() + this.getTimeToCollision(other)*this.getVelocityX();
-		
-		return getNewPositionShipX;
-	}
-	
-	public double getNewPositionYShip(Ship other) {
-		
-		double getNewPositionShipY = this.getPositionY() + this.getTimeToCollision(other)*this.getVelocityY();
-		
-		return getNewPositionShipY;
-	}
-	
-	
-	public double [] getCollisionposition (Ship other) throws NullPointerException, IllegalDenominatorException { //exception verwijst naar de exception binnen getTimeToCollision, moet ik ook al rekening houden hiermee en in een if-statement plaatsen?
-		
-		double deltaX = (other.getNewPositionXShip(this) - this.getNewPositionXShip(other) );
-		double deltaY = (other.getNewPositionYShip(this) - this.getNewPositionYShip(other) );
-		double angle = Math.atan2(deltaY,deltaX);
-		
-=======
 	public double [] getCollisionPosition (Ship other) throws NullPointerException, IllegalDenominatorException { //exception verwijst naar de exception binnen getTimeToCollision, moet ik ook al rekening houden hiermee en in een if-statement plaatsen?
 		
-		double angle = getOrientationAtCollision(other);
 		double [] collisionPos_ship1 = this.getPositionShipAtCollision(other);
 		double [] collisionPos_ship2 = other.getPositionShipAtCollision(other);
->>>>>>> 7dd2c2e662300bda1752821a4a46b9e7b22b166b
+		double col_angle = Math.atan2(collisionPos_ship2[1]-collisionPos_ship1[1], collisionPos_ship2[0]-collisionPos_ship1[0]);
+
 		
 		if ((this.getTimeToCollision(other) == Double.POSITIVE_INFINITY) || (overlap(other)))
 			return null;
 		
-<<<<<<< HEAD
-		if (! overlap(other)) {
-			double x;
-			double y;
-			if (other.getNewPositionXShip(this) > this.getNewPositionXShip(other) )
-				
-				x = this.getNewPositionXShip(other) + this.getRadius()*Math.cos(angle);
-				y = this.getNewPositionYShip(other) + this.getRadius()*Math.sin(angle);
-				
-			x = other.getNewPositionXShip(this) + other.getRadius()*Math.cos(angle);
-			y = other.getNewPositionYShip(this) + other.getRadius()*Math.sin(angle);
-			double [] collPos= {x,y}; 
-		return collPos;
-		}	
-		
-//		if (! overlap(other)) {
-//			
-////			double [] collisionPosition;
-//			if (this.getPositionY() <= other.getPositionY()) {
-////				collisionPosition[0] = this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius();
-////				collisionPosition[1] = this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius();
-////			}
-//				double [] collisionPosition = {this.getPositionX()+getTimeToCollision(other)*this.getVelocityX()+Math.cos(angle)*this.getRadius()
-//					, this.getPositionY()+getTimeToCollision(other)*this.getVelocityY()+Math.sin(angle)*this.getRadius()};
-//				return collisionPosition;
-//
-//			}
-//			else {
-//				double [] collisionPosition = {other.getPositionX()+getTimeToCollision(other)*other.getVelocityX()+Math.cos(angle)*other.getRadius()
-//							, other.getPositionY()+getTimeToCollision(other)*other.getVelocityY()+Math.sin(angle)*other.getRadius()};
-//				return collisionPosition;
-//				}
-//			}
-//		return null;
-=======
 		if (collisionPos_ship1[0] < collisionPos_ship2[0] && collisionPos_ship1[1] < collisionPos_ship2[1]
 				|| (collisionPos_ship1[1] < collisionPos_ship2[1])) {
-			double [] collisionPosition = {collisionPos_ship1[0]+this.getRadius()*Math.cos(angle),
-					collisionPos_ship1[1]+this.getRadius()*Math.sin(angle)};
+			double [] collisionPosition = {collisionPos_ship1[0]+this.getRadius()*Math.cos(col_angle),
+					collisionPos_ship1[1]+this.getRadius()*Math.sin(col_angle)};
 			return collisionPosition;
 			}
 		else {
-			double [] collisionPosition = {collisionPos_ship2[0]+other.getRadius()*Math.cos(angle),
-					collisionPos_ship1[1]+other.getRadius()*Math.sin(angle)};
+			double [] collisionPosition = {collisionPos_ship2[0]+other.getRadius()*Math.cos(col_angle),
+					collisionPos_ship1[1]+other.getRadius()*Math.sin(col_angle)};
 			return collisionPosition;
 		}
 		
@@ -731,36 +672,21 @@ public class Ship {
 //			return collisionPosition;
 //		}
 
->>>>>>> 7dd2c2e662300bda1752821a4a46b9e7b22b166b
 		
 	
-	
-<<<<<<< HEAD
+//	
 //	public double getOrientationAtCollision (Ship other) {
 //		double angle;
 //		double [] deltaPosition = deltaPosition(other);
 //		
-//		if (this.getPositionY() <= other.getPositionY())
-//			angle = Math.atan2(deltaPosition[0],deltaPosition[1]);
-//		
-//		else
-//			angle = Math.atan2(-deltaPosition[0],-deltaPosition[1]);
+//		angle = Math.atan2(deltaPosition[0],deltaPosition[1]);
 //		
 //		return angle;
-=======
-	public double getOrientationAtCollision (Ship other) {
-		double angle;
-		double [] deltaPosition = deltaPosition(other);
-		
-		angle = Math.atan2(deltaPosition[0],deltaPosition[1]);
-		
-		return angle;
->>>>>>> 7dd2c2e662300bda1752821a4a46b9e7b22b166b
-		
+//		}
 				
 		//dus eerst met if checken voor hoogste y coordinate, die ship pakken als other. Dus
 		// if this.y <= other -> nprmaal geval, else other = this en this = 0, this.Y = other.this . theta = 0, this.x = other x , theta = pi/2
-//	}
+	
 	
 	public double [] getPositionShipAtCollision(Ship other) throws NullPointerException, IllegalDenominatorException {
 		double time = getTimeToCollision(other);
