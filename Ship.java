@@ -69,16 +69,15 @@ public class Ship {
 	 * @throws 	IllegalRadiusException 
 	 * 			The given radius is not a valid radius for a ship.
 	 * 			| ! isValidRadius(radius)
+	 * @throws IllegalValueException 
 	 */
-	public Ship (double xposition, double yposition , double xvelocity, double yvelocity, double orientation, double radius) throws IllegalLengthException, IllegalRadiusException, NullPointerException {
+	public Ship (double xposition, double yposition , double xvelocity, double yvelocity, double orientation, double radius) throws IllegalRadiusException, NullPointerException, IllegalValueException {
         assert isValidOrientation(orientation);
 		setOrientation(orientation);
 		if (isValidVelocity(xvelocity, yvelocity))
 			setVelocity(xvelocity, yvelocity);
-//		if (! isValidPosition(xposition,yposition))
-//			throw new IllegalLengthException(position.length, this);
-//		if (! canHaveAsPosition(position))
-//			throw new NullPointerException();
+		if (! isValidPosition(xposition,yposition))
+			throw new IllegalValueException(xposition,yposition);
 		setPosition(xposition,yposition);
 		if (! isValidRadius(radius))
 			throw new IllegalRadiusException(radius,this);
@@ -86,7 +85,29 @@ public class Ship {
 		
 	}
 	
-	public Ship() throws IllegalRadiusException {
+	/**
+	 * Initialize this new ship with default values for the position
+	 * velocity, radius and orientation.
+	 * @post 	The x-coordinate of the position is set to the default 
+	 * 			position value.
+	 * 			| new.getPositionX() == DEF_POSITION
+	 * @post	The y-coordinate of the position is set to the default
+	 * 			position value.
+	 * 			| new.getPositionY() == DEF_POSITION
+	 * @post	The x-coordinate of the velocity is set to the minimum 
+	 * 			velocity value.
+	 * 			| new.getVelocityX() == MINIMUM_VELOCITY
+	 * @post	The y-coordinate of the velocity is set to the minimum 
+	 * 			velocity value.
+	 * 			| new.getVelocityY() == MINIMUM_VELOCITY
+	 * @post	The orientation of this ship is set to the minimum
+	 * 			orientation value.
+	 * 			| new.getOrientation() == MINIMUM_ORIENTATION
+	 * @post 	The radius of this ship is set to the minimum
+	 * 			orientation value.
+	 * 			| new.getRadius() == MINIMUM_RADIUS
+	 */
+	public Ship() throws IllegalRadiusException, IllegalValueException {
 		setVelocity(MINIMUM_VELOCITY,MINIMUM_VELOCITY);
 		setRadius(MINIMUM_RADIUS);
 		setPosition(DEF_POSITION,DEF_POSITION);
@@ -94,7 +115,6 @@ public class Ship {
 		
 	}
 	
-
 	/**
 	 * Check whether the given position is a valid position
 	 * for any ship.
@@ -163,11 +183,15 @@ public class Ship {
 	 * @post	The new Y-coordinate of position for this ship is equal
 	 * 			to the given Y-coordinate of position.
 	 * 			| new.getPositionY() == yposition
-	 * @throws
+	 * @throws 	IllegalValueException(xposition,yposition)
+	 * 			Either one or both of the coordinates for the position
+	 * 			is not a value
+	 * 			| ! isValidPosition(xposition,yposition)
+	 * 			
 	 */
 	
-	public void setPosition(double xposition, double yposition) IllegalValueException {  // exceptions?
-		if (! isValidPosition(xposition,yposition)
+	public void setPosition(double xposition, double yposition) throws IllegalValueException {  
+		if (! isValidPosition(xposition,yposition))
 				throw new IllegalValueException(xposition,yposition);
 			
 		this.xposition = xposition;
@@ -406,7 +430,7 @@ public class Ship {
 	 * 			| ! isValidDuration(duration)
 	 */
 	
-	public void move(double duration) throws IllegalDurationException {
+	public void move(double duration) throws IllegalDurationException, IllegalValueException {
 		
 		if (! isValidDuration(duration) )
 			throw new IllegalDurationException(duration);
@@ -545,27 +569,35 @@ public class Ship {
 	 * for a collision to happen between this ship and given ship.
 	 * @param	other
 	 * 			The other ship to collide with.
-	 * @return 	Returns the time if the dot product of the delta of the
-	 * 			velocity of the two ships and the delta of the position
-	 * 			of the two ships is greater than 0 or if d is smaller than 0.
-	 * 			| 
+	 * @return 	Returns the time of the collision, the formula used to determine this time 
+	 * 			is found by substituting thev alues of the new position of both ships 
+	 * 			into the formula for the distance between two points. 
+	 * 			This leads to a quadratic formula and the roots of this formula is the time.
+	 * 			| result == ( -( dotVeloPos+Math.sqrt(d) )/dotVeloVelo )
+	 * @throws	NullPointerException
+	 * 			The other ship is not effective.
+	 * 			| other == null
+	 * @throws	IllegalDenominatorException
+	 * 			The dot product of velocity with velocity is 0
+	 * 			and causes a division by zero.
+	 * 			| dotVeloVelo == 0.0
 	 */
 	public double getTimeToCollision(Ship other) throws NullPointerException, IllegalDenominatorException {
 		if (! overlap(other)) {
-			double DeltaT;
+			double time;
 			double dotVeloPos = dotProduct(deltaVelocity(other), deltaPosition(other));
 			double dotVeloVelo = dotProduct(deltaVelocity(other),deltaVelocity(other));
 			double dotPosPos = dotProduct(deltaPosition(other),deltaPosition(other));
 			double d = Math.pow(dotVeloPos,2.0) - dotVeloVelo*(dotPosPos-Math.pow(getDistanceBetween(other),2.0));
 			if (dotVeloPos >= 0.0 || d <= 0) {
-				DeltaT = Double.POSITIVE_INFINITY;
-				return DeltaT;
+				time = Double.POSITIVE_INFINITY;
+				return time;
 			}
 			else	{
 				if (dotVeloVelo == 0.0)
 					throw new IllegalDenominatorException(dotVeloVelo);
-				DeltaT = -(dotVeloPos+Math.sqrt(d))/dotVeloVelo;
-				return DeltaT;
+				time = -(dotVeloPos+Math.sqrt(d))/dotVeloVelo;
+				return time;
 			}
 		}
 		return 0.0;   //??????????????????????????????????????????????????????????????????????????
@@ -584,6 +616,7 @@ public class Ship {
 	 * 			The other ship is not effective.
 	 * 			| other == null
 	 */
+	
 	public double [] deltaVelocity(Ship other) throws NullPointerException {
 		double [] deltaVelocity = {other.getVelocityX()-this.getVelocityX(),other.getVelocityY()-this.getVelocityY()};
 		return deltaVelocity;
