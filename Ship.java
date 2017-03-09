@@ -95,21 +95,22 @@ public class Ship {
 	}
 	
 
-//	/**
-//	 * Check whether the given position is a valid position
-//	 * for any ship.
-//	 * @param 	position
-//	 * 			The position to check.
-//	 * @return	True if and only if the given position //? null
-//	 * 			 has a X-coordinate and Y-coordinate.
-//	 * 			| result == (position.length == 2)
-//	 * 
-//	 */
-//	
-//	public static boolean isValidPosition(double [] position){   	
-//		return (position.length == 2);
+	/**
+	 * Check whether the given position is a valid position
+	 * for any ship.
+	 * @param 	position
+	 * 			The position to check.
+	 * @return	True if and only if the values of the x-coordinate	
+	 * 			and y-coordinate of the given position is a valid number
+	 * 			| result == (position[0] != Double.NaN 
+	 * 							&& position[1] != Double.NaN))
+	 * 
+	 */
+	
+	public static boolean isValidPosition(double xposition, double yposition){   	
+		return (xposition != Double.NaN && yposition != Double.NaN);
 //			
-//	}
+	}
 //	
 //	/**
 //	 * Return a boolean reflecting whether this ship can
@@ -162,10 +163,13 @@ public class Ship {
 	 * @post	The new Y-coordinate of position for this ship is equal
 	 * 			to the given Y-coordinate of position.
 	 * 			| new.getPositionY() == yposition
+	 * @throws
 	 */
 	
-	public void setPosition(double xposition, double yposition) {  // exceptions?
-
+	public void setPosition(double xposition, double yposition) IllegalValueException {  // exceptions?
+		if (! isValidPosition(xposition,yposition)
+				throw new IllegalValueException(xposition,yposition);
+			
 		this.xposition = xposition;
 		this.yposition = yposition;
 	}
